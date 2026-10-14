@@ -1,15 +1,21 @@
 {
   "name": "agentic-carousel",
   "version": "0.1.0",
-  "description": "Build platform-ready carousels from an outline.",
+  "description": "Create JSON carousel decks and printable HTML with Instagram, LinkedIn, and TikTok text presets through a Node.js SDK, CLI, and MCP.",
   "keywords": [
     "carousel",
     "instagram",
     "linkedin",
+    "tiktok",
     "slides",
-    "agentic-suite",
+    "html",
+    "social-content",
+    "json-deck",
+    "nodejs",
+    "typescript",
     "cli",
-    "mcp"
+    "mcp",
+    "content-validation"
   ],
   "license": "MIT",
   "author": "Pooria Arab",
