@@ -1,0 +1,15 @@
+# agentic-carousel
+
+Build platform-ready carousels from an outline.
+
+Keywords: carousel,instagram,linkedin,slides,agentic-suite,cli,mcp.
+
+- SDK: import { summarizeText, dispatchText } from "agentic-carousel".
+- CLI: agentic-carousel summary --text "...".
+- MCP: run agentic-carousel mcp, then call summarize_text.
+
+## Docs
+
+- README: https://github.com/pooriaarab/agentic-carousel
+- Core contract: https://github.com/pooriaarab/agentic-carousel/blob/main/docs/agentic-core.md
+- License: MIT
