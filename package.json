@@ -1,6 +1,6 @@
 {
   "name": "agentic-carousel",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Create JSON carousel decks and printable HTML with Instagram, LinkedIn, and TikTok text presets through a Node.js SDK, CLI, and MCP.",
   "keywords": [
     "carousel",
