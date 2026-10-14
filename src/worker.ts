@@ -1,39 +1,5 @@
-import { summarizeText } from "./core.js";
+import { createCarousel, validateCarousel } from "./carousel.js";
 import { VERSION } from "./version.js";
-
-export interface WorkerEnv {
-  PACK_NAME?: string;
-}
-
-function json(value: unknown, status = 200): Response {
-  return new Response(JSON.stringify(value), {
-    status,
-    headers: { "content-type": "application/json" },
-  });
-}
-
-export default {
-  async fetch(request: Request, env: WorkerEnv): Promise<Response> {
-    const url = new URL(request.url);
-    if (request.method === "GET" && url.pathname === "/health") {
-      return json({ ok: true, pack: env.PACK_NAME ?? "agentic-pack", version: VERSION });
-    }
-    if (request.method === "POST" && url.pathname === "/summarize") {
-      let body: unknown;
-      try {
-        body = await request.json();
-      } catch {
-        return json({ error: "body must be JSON" }, 400);
-      }
-      if (typeof body !== "object" || body === null || !("text" in body)) {
-        return json({ error: "body needs a text string" }, 400);
-      }
-      const { text } = body as { text: unknown };
-      if (typeof text !== "string") {
-        return json({ error: "body needs a text string" }, 400);
-      }
-      return json(summarizeText(text));
-    }
-    return json({ error: "not found" }, 404);
-  },
-};
+export interface WorkerEnv { PACK_NAME?: string; }
+const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { "content-type": "application/json" } });
+export default { async fetch(request: Request, env: WorkerEnv): Promise<Response> { const url = new URL(request.url); if (request.method === "GET" && url.pathname === "/health") return json({ ok: true, pack: env.PACK_NAME ?? "agentic-carousel", version: VERSION }); if (request.method === "POST" && url.pathname === "/create") { try { const body = await request.json() as { topic?: unknown; slides?: unknown }; if (typeof body.topic !== "string" || (typeof body.slides !== "string" && !Array.isArray(body.slides))) return json({ error: "body needs topic and slides" }, 400); return json(createCarousel(body.topic, body.slides as string)); } catch (error) { return json({ error: error instanceof Error ? error.message : "bad body" }, 400); } } if (request.method === "POST" && url.pathname === "/validate") { try { return json(validateCarousel(await request.json() as never)); } catch { return json({ error: "body must be a deck JSON" }, 400); } } return json({ error: "not found" }, 404); } };

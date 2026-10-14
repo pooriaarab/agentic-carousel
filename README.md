@@ -1,108 +1,47 @@
-# Agentic carousel
+# Agentic Carousel
 
-Build platform-ready carousels from an outline.
+Build platform-ready social carousels from an outline. The package creates a JSON deck with a hook slide, content slides, and a CTA slide that includes AI-content disclosure text. It creates no external images or network requests.
 
-Clone this repo to start a new pack. It gives one core with three
-faces: a terminal command, an npm import, and an MCP server.
-
-## What you get
-
-- One core: brand config, logs, guards, routing, dry run, cost reports.
-- Three faces over that core: CLI, library, MCP server.
-- A frozen core contract, so packs share one API.
-- A worker entry and a wrangler sample for edge deploys.
-- Build, typecheck, and tests that pass from a fresh clone.
-
-## Quick start
+## Install and build
 
 ```sh
-git clone https://github.com/pooriaarab/agentic-carousel.git my-pack
-cd my-pack
 npm install
 npm run build
 npm run typecheck
 npm test
 ```
 
-Run the command:
+## CLI
 
 ```sh
-node dist/cli.js summary --text "hello world hello"
+node dist/cli.js carousel create --topic "Better async handoffs" --slides "Start with context|Name the owner|Set a deadline"
+node dist/cli.js carousel validate --file carousel-deck.json --platform linkedin
+node dist/cli.js carousel render --file carousel-deck.json > carousel.html
 ```
 
-Call the library:
+`create` prints `{ deck, plan }` as JSON. `render` outputs one self-contained HTML document with inline CSS; each slide is exactly 1080×1350px. The export plan identifies the deck, HTML, and expected slide PNG names.
+
+## Library
 
 ```js
-import { summarizeText } from "./dist/index.js";
+import { createCarousel, validateCarousel, renderCarouselHtml, exportPlan } from "agentic-carousel";
 
-console.log(summarizeText("hello world hello"));
+const deck = createCarousel("Better async handoffs", [
+  { title: "Give context", body: "Explain the outcome, constraints, and why it matters." },
+  { title: "Name an owner", body: "Make responsibility explicit." },
+]);
+
+console.log(validateCarousel(deck, "instagram"));
+console.log(renderCarouselHtml(deck));
+console.log(exportPlan(deck));
 ```
 
-Start the MCP server:
+Platforms supported by validation are `instagram`, `linkedin`, and `tiktok`. Carousels have 2–10 slides and platform-specific title/body limits.
+
+## MCP
 
 ```sh
 node dist/cli.js mcp
 ```
 
-## Three usecases
-
-1. You run one text summary from the terminal.
-2. You import the summary function in a script.
-3. You let an agent call the same function as an MCP tool.
-
-## Clone checklist
-
-This repo is a template. Replace each slot in each file that holds it.
-
-- `agentic-carousel`: the directory name, like `my-pack`.
-- `agentic-carousel`: the npm name, like `agentic-<block>` (bare name, never @pooriaarab/ scoped unless the brief says scoped).
-- `agentic-carousel`: the terminal command, like `my-pack`.
-- `Build platform-ready carousels from an outline.`: one plain sentence, under 100 chars.
-- `carousel,instagram,linkedin,slides,agentic-suite,cli,mcp`: plain keywords, like `notes, search, cli`.
-- `pooriaarab`: the repo owner, like `pooriaarab`.
-
-Slot files: `AGENTS.md`, `SKILL.md`, `RULES.md`, `llms.txt`,
-`server.json`, `.mcp.json`, `wrangler.jsonc`.
-
-Then rename the scaffold identity itself:
-
-- `package.json`: name, bin commands, mcpName. Remove `"private": true`.
-- `src/index.ts`: the `DEFAULT_BRAND` fields.
-- This file: the pitch and the examples above.
-
-At publish time, set `server.json` version to the npm version and
-`server.json` repository id from `gh api repos/OWNER/REPO --jq .id`.
-
-## Gates
-
-Run all three before you push a pack:
-
-```sh
-npm run build && npm run typecheck && npm test
-```
-
-Then run the real installed CLI once from a tarball:
-
-```sh
-npm pack
-npx --yes --package ./pooriaarab-agentic-carousel-0.1.0.tgz agentic-pack summary --text "hello"
-```
-
-## Release flow
-
-Push to `main` for review. Merge to `release` to publish. The
-publish workflow ships only when the version is new.
-
-## Layout
-
-- `src/index.ts`: the library face.
-- `src/cli.ts`: the terminal face.
-- `src/mcp.ts`: the MCP server. `src/mcp-bin.ts` starts it.
-- `src/worker.ts`: the edge worker face.
-- `src/core.ts`: the shared core.
-- `agentic-core.d.ts`: the frozen contract.
-- `docs/agentic-core.md`: the contract in plain words.
-
-## License
-
-MIT. See `LICENSE`.
+MCP tools: `create_carousel`, `validate_carousel`, `render_carousel_html`, `export_carousel_plan`, and `get_cost_report`.
